@@ -4,6 +4,26 @@ var victoriasEnemigo = 0;
 var rondaActual = 1;
 var maxRondas = 5;
 var juegoTerminado = false;
+var totalVictoriasJugador = 0;
+var totalDerrotasJugador = 0;
+
+function cargarEstadisticasLocalStorage() {
+    totalVictoriasJugador = parseInt(localStorage.getItem("tp1_victoriasJugador") || "0", 10);
+    totalDerrotasJugador = parseInt(localStorage.getItem("tp1_derrotasJugador") || "0", 10);
+    actualizarEstadisticasGlobales();
+}
+
+function guardarEstadisticasLocalStorage() {
+    localStorage.setItem("tp1_victoriasJugador", totalVictoriasJugador);
+    localStorage.setItem("tp1_derrotasJugador", totalDerrotasJugador);
+}
+
+function actualizarEstadisticasGlobales() {
+    var estadisticas = document.getElementById("estadisticas-globales");
+    if (estadisticas) {
+        estadisticas.innerHTML = `Victorias totales: ${totalVictoriasJugador} - Derrotas totales: ${totalDerrotasJugador}`;
+    }
+}
 
 function jugar(obj){
     if (juegoTerminado) return; // No permitir jugar si terminó
@@ -31,9 +51,11 @@ function jugar(obj){
     if (jugada[obj][enemigo] === "Ganas") {
         victoriasJugador++;
         rondaActual++;
+        totalVictoriasJugador++;
     } else if (jugada[obj][enemigo] === "Pierdes") {
         victoriasEnemigo++;
         rondaActual++;
+        totalDerrotasJugador++;
     } // Si es empate, no se avanza la ronda
 
     document.getElementById("marcador").innerHTML = 
@@ -42,6 +64,9 @@ function jugar(obj){
     // Verificar si alguien ganó la partida antes de la última ronda
     if (victoriasJugador === 3 || victoriasEnemigo === 3) {
         juegoTerminado = true;
+        guardarEstadisticasLocalStorage();
+        actualizarEstadisticasGlobales();
+
         if (victoriasJugador === 3) {
             document.getElementById("estadoRonda").innerHTML = "¡La partida ha terminado! Ganaste al mejor de 5.";
             document.getElementById("resultado").innerHTML = "¡Ganaste la partida!";
@@ -57,6 +82,9 @@ function jugar(obj){
     // Si se llega a la última ronda, terminar el juego y mostrar el resultado final
     if (rondaActual > maxRondas) {
         juegoTerminado = true;
+        guardarEstadisticasLocalStorage();
+        actualizarEstadisticasGlobales();
+
         if (victoriasJugador > victoriasEnemigo) {
             document.getElementById("estadoRonda").innerHTML = "¡La partida ha terminado! Ganaste al mejor de 5.";
             document.getElementById("resultado").innerHTML = "¡Ganaste la partida!";
@@ -82,5 +110,23 @@ function reiniciarJuego() {
     document.getElementById("enemigo").innerHTML = "";
     document.getElementById("resultado").innerHTML = "";
     document.getElementById("ronda").innerHTML = `Ronda: 1 / ${maxRondas}`;
+    document.getElementById("estadoRonda").innerHTML = "";
     document.getElementById("reiniciar").style.display = "none";
+    document.getElementById("menu-btn").style.display = "none";
+    actualizarEstadisticasGlobales();
 }
+
+function borrarEstadisticasLocalStorage() {
+    totalVictoriasJugador = 0;
+    totalDerrotasJugador = 0;
+    guardarEstadisticasLocalStorage();
+    actualizarEstadisticasGlobales();
+}
+
+window.addEventListener("DOMContentLoaded", function() {
+    cargarEstadisticasLocalStorage();
+    document.getElementById("ronda").innerHTML = `Ronda: ${rondaActual} / ${maxRondas}`;
+    document.getElementById("marcador").innerHTML = "Jugador: 0 - Enemigo: 0";
+    document.getElementById("reiniciar").style.display = "none";
+    document.getElementById("menu-btn").style.display = "none";
+});

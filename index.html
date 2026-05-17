@@ -107,10 +107,9 @@
             <div id="ronda">Ronda: 1 / 5</div>
             <div id="estadoRonda"></div>
             <div id="marcador">Jugador: 0 - Enemigo: 0</div>
-            <div>Tu jugada: <span id="jugador"></span></div>
-            <div>Jugada enemigo: <span id="enemigo"></span></div>
+            <div id="estadisticas-globales">Victorias totales: 0 - Derrotas totales: 0</div>
             <button id="reiniciar" onclick="reiniciarJuego()" style="display:none;">Reiniciar partida</button>
-            <button id="menu-btn" onclick="window.location.href='../index.html'" style="display:none; margin-left:10px;">Volver al menú</button>
+            <button id="borrar-estadisticas" onclick="borrarEstadisticasLocalStorage()" style="margin-top: 12px; display: block; margin-left: auto; margin-right: auto; padding: 12px 32px; font-size: 1.1em; background-color: #a34e4e; color: #ffffff; border: none; border-radius: 8px; cursor: pointer; transition: background 0.3s;">Borrar estadísticas</button>
         </div>
     </div>
 </body>
